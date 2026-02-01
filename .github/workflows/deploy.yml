@@ -16,23 +16,23 @@ jobs:
         with:
           fetch-depth: 2
 
-      # - name: Configure AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v4
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: eu-central-1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
 
-      # - name: Validate CloudFormation Template
-      #   run: |
-      #     aws cloudformation validate-template \
-      #       --template-body file://cloudfront_s3_stack_conf.yml \
-      #       --region eu-central-1
+      - name: Validate CloudFormation Template
+        run: |
+          aws cloudformation validate-template \
+            --template-body file://cloudfront_s3_stack_conf.yml \
+            --region eu-central-1
 
-      # - name: Deploy Stack
-      #   run: |
-      #     chmod +x scripts/create_update_change_set.sh
-      #     ./scripts/create_update_change_set.sh
+      - name: Deploy Stack
+        run: |
+          chmod +x scripts/create_update_change_set.sh
+          ./scripts/create_update_change_set.sh
 
       - name: Upload index.html
         if: |
