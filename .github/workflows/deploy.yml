@@ -13,21 +13,31 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
+          fetch-depth: 2
 
-      - name: Validate CloudFormation Template
-        run: |
-          aws cloudformation validate-template \
-            --template-body file://cloudfront_s3_stack_conf.yml \
-            --region eu-central-1
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: eu-central-1
 
-      - name: Deploy Stack
+      # - name: Validate CloudFormation Template
+      #   run: |
+      #     aws cloudformation validate-template \
+      #       --template-body file://cloudfront_s3_stack_conf.yml \
+      #       --region eu-central-1
+
+      # - name: Deploy Stack
+      #   run: |
+      #     chmod +x scripts/create_update_change_set.sh
+      #     ./scripts/create_update_change_set.sh
+
+      - name: Upload index.html
+        if: |
+          contains(github.event.commits.*.files.*, 'index.html') ||
+          github.event_name == 'workflow_dispatch'
         run: |
-          chmod +x scripts/create_update_change_set.sh
-          ./scripts/create_update_change_set.sh
+          aws s3 cp index.html s3://devops-hometask-hristoiliev-eu-central-1/index.html
+          echo "index.html uploaded"
