@@ -67,24 +67,4 @@ aws cloudformation describe-stacks \
   --query 'Stacks[0].StackStatus' \
   --output text
 
-# We want to upload index.html only if the file has changed or if it's the first time we deploy the stack
-LOCAL_HASH=$(md5sum index.html | awk '{print $1}')
-REMOTE_HASH=$(aws s3api head-object \
-  --bucket $BUCKET \
-  --key index.html \
-  --query 'Metadata.md5' \
-  --output text 2>/dev/null)
-
-if [ "$LOCAL_HASH" != "$REMOTE_HASH" ]; then
-    echo  "index.html is changed. Uploading the new one."
-    aws s3 cp index.html s3://$BUCKET/index.html \
-      --metadata md5=$LOCAL_HASH
-else
-    echo "index.html unchanged. Skipping upload."
-fi
-
-#verify the upload
-echo "Checking if the file is uploaded. ls"
-aws s3 ls s3://$BUCKET/
-
 echo "Stack $STACK_NAME has completed successfully"
