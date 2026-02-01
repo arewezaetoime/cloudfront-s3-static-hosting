@@ -21,7 +21,7 @@ if aws cloudformation describe-stacks --stack-name $STACK_NAME --region $REGION 
     aws cloudformation describe-change-set \
       --stack-name $STACK_NAME \
       --change-set-name $CHANGESET_NAME \
-      --region $REGION
+      --region $REGION | cat
 
     CHANGESET_STATUS=$(aws cloudformation describe-change-set \
       --stack-name $STACK_NAME \
@@ -60,11 +60,5 @@ else
       --stack-name $STACK_NAME \
       --region $REGION
 fi
-
-aws cloudformation describe-stacks \
-  --stack-name $STACK_NAME \
-  --region $REGION \
-  --query 'Stacks[0].StackStatus' \
-  --output text
 
 echo "Stack $STACK_NAME has completed successfully"
