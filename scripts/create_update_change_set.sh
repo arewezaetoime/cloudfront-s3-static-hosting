@@ -17,7 +17,7 @@ if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --region "$REGI
     aws cloudformation create-change-set \
       --stack-name "$STACK_NAME" \
       --change-set-name "$CHANGESET_NAME" \
-      --template-body file://$TEMPLATE \
+      --template-body file://"$TEMPLATE" \
       --region "$REGION"
 
     aws cloudformation wait change-set-create-complete \
@@ -31,7 +31,6 @@ if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --region "$REGI
       --change-set-name "$CHANGESET_NAME" \
       --region "$REGION" \
       --no-paginate \
-      --no-cli-pager
 
     CHANGESET_STATUS=$(aws cloudformation describe-change-set \
       --stack-name "$STACK_NAME" \
@@ -39,7 +38,6 @@ if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --region "$REGI
       --region "$REGION" \
       --query 'Status' \
       --output text \
-      --no-cli-pager)
 
     if [ "$CHANGESET_STATUS" == "CREATE_COMPLETE" ]; then
         
@@ -48,7 +46,6 @@ if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --region "$REGI
           --stack-name "$STACK_NAME" \
           --change-set-name "$CHANGESET_NAME" \
           --region "$REGION" \
-          --no-cli-pager
 
         aws cloudformation wait stack-update-complete \
           --stack-name "$STACK_NAME" \
@@ -67,7 +64,6 @@ else
       --stack-name "$STACK_NAME" \
       --template-body file://"$TEMPLATE" \
       --region "$REGION" \
-      --no-cli-pager
 
     aws cloudformation wait stack-create-complete \
       --stack-name "$STACK_NAME" \
