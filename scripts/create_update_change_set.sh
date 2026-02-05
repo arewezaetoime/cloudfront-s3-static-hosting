@@ -37,7 +37,7 @@ if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --region "$REGI
       --change-set-name "$CHANGESET_NAME" \
       --region "$REGION" \
       --query 'Status' \
-      --output text \
+      --output text)
 
     if [ "$CHANGESET_STATUS" == "CREATE_COMPLETE" ]; then
         
